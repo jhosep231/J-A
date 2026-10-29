@@ -677,11 +677,50 @@
 
 <script>
   // ============ CONFIG ============
-  const CONFIG = {
-    // Pega aquí la URL de tu Apps Script cuando quieras cargar desde Google Sheets
-    // Ejemplo: 'https://script.google.com/macros/s/AKfycb.../exec'
-    urlSheet: 'https://script.google.com/macros/s/AKfycbxB8dtYJAANkzWnjs0XLwM_hLRkl_Z3709OayFGWiDyihfLij3fIE7RCAZWBWr4_o6kpQ/exec',
-    storageKey: 'ja_data_v1',
+async function loadFromSheet() {
+  if (!CONFIG.urlSheet || !CONFIG.urlSheet.trim()) return;
+  
+  try {
+    const url = CONFIG.urlSheet + '?v=' + Date.now();
+    const r = await fetch(url);
+    const texto = await r.text();
+    
+    if (texto.trim().startsWith('<')) {
+      console.error('❌ El Sheet devolvió HTML. Revisa el deployment.');
+      return;
+    }
+    
+    const data = JSON.parse(texto);
+    
+    // Compatibilidad: formato viejo (array) o nuevo (objeto con productos+textos)
+    let prods = Array.isArray(data) ? data : (data.productos || []);
+    
+    // Aplicar textos si vienen
+    if (!Array.isArray(data) && data.textos && Object.keys(data.textos).length) {
+      state.texts = { ...state.texts, ...data.textos };
+      applyTextsToPage();
+    }
+    
+    state.products = prods.map((p, i) => ({
+      id: i + 1,
+      nombre: p.Nombre || 'Sin nombre',
+      categoria: p.Categoria || 'General',
+      precio: parseFloat(p.Precio) || 0,
+      precioOriginal: p.PrecioOriginal ? parseFloat(p.PrecioOriginal) : null,
+      descripcion: p.Descripcion || '',
+      imagen: p.ImagenURL || 'https://placehold.co/500',
+      stock: (p.Stock || '').toLowerCase().includes('agotado') ? 'out'
+           : (p.Stock || '').toLowerCase().includes('últim') ? 'low'
+           : 'ok',
+    }));
+    
+    renderCatnav(); renderFilters(); renderCatalog();
+    console.info(`✅ Cargados ${state.products.length} productos desde Sheet`);
+    
+  } catch (e) {
+    console.error('❌ Error cargando del Sheet:', e);
+  }
+}
   };
 
   // ============ TUS DATOS ============
@@ -1141,7 +1180,16 @@
   }));
 
   $('admin-close').addEventListener('click', () => closeAdmin());
-  $('admin-save').addEventListener('click', () => { saveData(); markSaved(); toast('Cambios guardados'); });
+  // Reconstruir el anuncio superior con los textos actuales
+const announceEl = document.querySelector('.announce');
+if (announceEl) {
+  const waFmt = `+${t.whatsapp.slice(0,2)} ${t.whatsapp.slice(2,5)} ${t.whatsapp.slice(5,8)} ${t.whatsapp.slice(8)}`;
+  announceEl.innerHTML = `
+    <span><span class="star">★</span> ${esc(t.anuncio.split('·')[0].trim() || 'Envío gratis desde S/ 150')}</span>
+    <span><span class="star">★</span> Recojo en tienda: ${esc(t.direccion)}</span>
+    <span><span class="star">★</span> WhatsApp: <a href="https://wa.me/${t.whatsapp}" target="_blank">${waFmt}</a></span>
+  `;
+}
   $('admin-trigger').addEventListener('click', openAdmin);
   document.addEventListener('keydown', e => {
     if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'E' || e.key === 'e')) {
@@ -1188,6 +1236,39 @@
 
   // Cargar desde Google Sheets si hay URL configurada
   async function loadFromSheet() {
+async function saveToSheet() {
+  if (!CONFIG.urlSheet || !CONFIG.urlSheet.trim()) {
+    return { ok: false, reason: 'Falta urlSheet' };
+  }
+  
+  try {
+    const payload = {
+      secret: CONFIG.secret,
+      productos: state.products.map(p => ({
+        Nombre: p.nombre,
+        Categoria: p.categoria,
+        Precio: p.precio,
+        PrecioOriginal: p.precioOriginal || '',
+        Descripcion: p.descripcion,
+        ImagenURL: p.imagen,
+        Stock: p.stock === 'out' ? 'Agotado' : p.stock === 'low' ? 'Últimas' : 'Disponible',
+      })),
+      textos: state.texts,
+    };
+    
+    await fetch(CONFIG.urlSheet, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify(payload),
+    });
+    
+    return { ok: true };
+  } catch (e) {
+    console.error('Error guardando en Sheet:', e);
+    return { ok: false, reason: e.message };
+  }
+}
     if (!CONFIG.urlSheet || !CONFIG.urlSheet.trim()) return;
     try {
       const r = await fetch(CONFIG.urlSheet);
