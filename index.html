@@ -186,6 +186,7 @@
   .footer-reclamos svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2; }
   .admin-trigger { background: none; color: rgba(247, 237, 217, 0.15); font-size: 18px; padding: 8px; transition: color 0.2s; }
   .admin-trigger:hover { color: rgba(247, 237, 217, 0.6); }
+  #load-status { font-size: 11px; color: rgba(247, 237, 217, 0.5); }
 
   .overlay { position: fixed; inset: 0; background: rgba(26, 20, 16, 0.55); z-index: 100; opacity: 0; pointer-events: none; transition: opacity 0.2s; backdrop-filter: blur(3px); }
   .overlay.open { opacity: 1; pointer-events: auto; }
@@ -351,7 +352,7 @@
 </head>
 <body>
 
-<div class="announce">
+<div class="announce" id="announce">
   <span><span class="star">★</span> Envío gratis desde S/ 150</span>
   <span><span class="star">★</span> Recojo en tienda: Av. Canta Callao SN</span>
   <span><span class="star">★</span> WhatsApp: <a href="https://wa.me/51960107899" target="_blank">+51 960 107 899</a></span>
@@ -360,7 +361,7 @@
 <header class="header">
   <div class="header-main">
     <a href="#" class="brand">
-      <div class="brand-logo">JA</div>
+      <div class="brand-logo" id="brand-logo">JA</div>
       <div class="brand-text">
         <div class="brand-name" id="brand-name">J&amp;A</div>
         <div class="brand-sub">variedades importadas</div>
@@ -401,7 +402,7 @@
           Ver productos
           <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
         </a>
-        <a href="https://wa.me/51960107899?text=Hola%2C%20quisiera%20ver%20el%20cat%C3%A1logo" target="_blank" rel="noopener" class="btn-ghost">Consultar por WhatsApp</a>
+        <a href="https://wa.me/51960107899?text=Hola%2C%20quisiera%20ver%20el%20cat%C3%A1logo" target="_blank" rel="noopener" class="btn-ghost" id="hero-wa-btn">Consultar por WhatsApp</a>
       </div>
     </div>
     <div class="hero-visual">
@@ -501,7 +502,7 @@
           <tr><td><strong>Lima</strong> — motorizado</td><td>2 a 24 horas</td><td>desde S/ 8</td></tr>
           <tr><td><strong>Lima</strong> — Olva</td><td>24 a 48 horas</td><td>desde S/ 10</td></tr>
           <tr><td><strong>Provincias</strong> — Olva / Shalom</td><td>2 a 4 días hábiles</td><td>desde S/ 15</td></tr>
-          <tr><td><strong>Recojo</strong> — Av. Canta Callao SN</td><td>Mismo día</td><td>Gratis</td></tr>
+          <tr><td><strong>Recojo</strong> — <span id="ship-address">Av. Canta Callao SN</span></td><td>Mismo día</td><td>Gratis</td></tr>
         </tbody>
       </table>
     </div>
@@ -548,7 +549,7 @@
 <footer class="footer">
   <div class="footer-inner">
     <div class="footer-brand">
-      <div class="brand-logo" style="background: var(--mustard); color: var(--ink);">JA</div>
+      <div class="brand-logo" id="footer-logo" style="background: var(--mustard); color: var(--ink);">JA</div>
       <h3 id="footer-name">J&amp;A</h3>
       <p>Variedades importadas para tu fiesta, tu casa o tu día a día.</p>
       <div class="hand">— J&amp;A</div>
@@ -561,17 +562,18 @@
     </div>
     <div class="footer-col">
       <h4>Horario</h4>
-      <span>Lun a Sáb</span><span>10 am – 7 pm</span><span>Domingo cerrado</span>
+      <span id="footer-hours">Lun a Sáb, 10 am – 7 pm</span>
     </div>
     <div class="footer-col">
       <h4>Ayuda</h4>
       <a href="#catalogo">Catálogo</a>
       <a href="#faq-list">Preguntas frecuentes</a>
-      <a href="https://wa.me/51960107899" target="_blank">Escríbenos</a>
+      <a href="https://wa.me/51960107899" target="_blank" id="footer-help-wa">Escríbenos</a>
     </div>
   </div>
   <div class="footer-bottom">
     <span>© 2026 J&amp;A · Variedades importadas</span>
+    <span id="load-status">⏳ Cargando…</span>
     <button class="admin-trigger" id="admin-trigger" title="Editor">⚙</button>
     <a href="#" class="footer-reclamos">
       <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
@@ -601,7 +603,7 @@
   <div class="admin-topbar">
     <div class="admin-brand">
       <span class="label">Editor</span>
-      <h1>J&amp;A</h1>
+      <h1 id="admin-title">J&amp;A</h1>
     </div>
     <div class="admin-actions">
       <span class="save-status" id="save-status">Sin cambios</span>
@@ -641,11 +643,11 @@
         <div class="admin-data-inner">
           <div class="admin-data-head">
             <h2>Datos y sincronización</h2>
-            <p>Los cambios se guardan en este navegador. Para publicarlos, exporta el JSON y pégalo en tu Google Sheet.</p>
+            <p>Los cambios se envían automáticamente al Google Sheet al pulsar "Guardar". También puedes exportar/importar JSON como respaldo.</p>
           </div>
           <div class="data-card">
-            <h3>Exportar para Google Sheets</h3>
-            <p>Copia este JSON o descárgalo. Pégalo en tu Sheet para que todos los clientes vean los cambios.</p>
+            <h3>Exportar JSON</h3>
+            <p>Copia o descarga este JSON como respaldo.</p>
             <textarea id="data-export-json" readonly></textarea>
             <div class="data-actions" style="margin-top:12px;">
               <button class="admin-btn admin-btn-ghost" id="data-copy-json">Copiar JSON</button>
@@ -654,7 +656,7 @@
           </div>
           <div class="data-card">
             <h3>Importar JSON</h3>
-            <p>Pega un JSON exportado previamente para restaurar los productos y textos.</p>
+            <p>Pega un JSON exportado previamente para restaurar.</p>
             <textarea id="data-import-json" placeholder='{"productos":[...],"textos":{...}}'></textarea>
             <div class="data-actions" style="margin-top:12px;">
               <button class="admin-btn admin-btn-primary" id="data-import-btn">Importar</button>
@@ -662,7 +664,7 @@
           </div>
           <div class="data-card">
             <h3>Restablecer</h3>
-            <p>Borra todos los cambios guardados y vuelve a los datos originales.</p>
+            <p>Borra todos los cambios locales y vuelve a los originales.</p>
             <div class="data-actions">
               <button class="admin-btn admin-btn-danger" id="data-reset">Restablecer todo</button>
             </div>
@@ -676,15 +678,14 @@
 <div class="toast" id="toast"></div>
 
 <script>
-  // ============ CONFIG ============
+  // ============ CONFIGURACIÓN ============
   const CONFIG = {
-    // Pega aquí la URL de tu Apps Script cuando quieras cargar desde Google Sheets
-    // Ejemplo: 'https://script.google.com/macros/s/AKfycb.../exec'
-    urlSheet: '',
+    urlSheet: 'https://script.google.com/macros/s/AKfycbxB8dtYJAANkzWnjs0XLwM_hLRkl_Z3709OayFGWiDyihfLij3fIE7RCAZWBWr4_o6kpQ/exec',
+    secret: 'ja-2026-cambia-esto', // Debe coincidir con el SECRET de tu Apps Script
     storageKey: 'ja_data_v1',
   };
 
-  // ============ TUS DATOS ============
+  // ============ DATOS POR DEFECTO ============
   const DEFAULT_PRODUCTS = [
     { id: 1, nombre: "Máscara de calabaza LED", categoria: "Máscaras", precio: 42.00, precioOriginal: null, descripcion: "Látex con luz LED. Pilas incluidas. Talla adulto.", imagen: "https://images.unsplash.com/photo-1509557965875-b88c97052f0e?w=500&h=500&fit=crop&q=80", stock: "ok" },
     { id: 2, nombre: "Disfraz de fantasma", categoria: "Disfraces", precio: 85.00, precioOriginal: null, descripcion: "Gasa blanca con capucha. Adulto 1.60 a 1.75 m.", imagen: "https://images.unsplash.com/photo-1509248961158-e54f6934749c?w=500&h=500&fit=crop&q=80", stock: "low" },
@@ -708,6 +709,25 @@
     heroSub: 'Disfraces, máscaras y decoración importados para tu próxima fiesta. Poca cantidad, buena calidad. Envíos a todo el Perú.',
     anuncio: 'Envío gratis desde S/ 150 · Recojo en tienda · WhatsApp +51 960 107 899',
   };
+
+  // ============ HELPERS ============
+  const $ = id => document.getElementById(id);
+  const fmt = n => (parseFloat(n) || 0).toFixed(2);
+  const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+  function waNumber(w) {
+    const s = String(w).replace(/\D/g, '');
+    if (s.length <= 9) return '+51 ' + s.slice(0,3) + ' ' + s.slice(3,6) + ' ' + s.slice(6);
+    return '+' + s.slice(0,2) + ' ' + s.slice(2,5) + ' ' + s.slice(5,8) + ' ' + s.slice(8);
+  }
+
+  function toast(msg, type = '') {
+    const el = $('toast');
+    el.textContent = msg;
+    el.className = 'toast show' + (type ? ' ' + type : '');
+    clearTimeout(toast._t);
+    toast._t = setTimeout(() => el.classList.remove('show'), 3000);
+  }
 
   // ============ STORAGE ============
   function loadData() {
@@ -747,51 +767,45 @@
     dirty: false,
   };
 
-  // ============ HELPERS ============
-  const $ = id => document.getElementById(id);
-  const fmt = n => (parseFloat(n) || 0).toFixed(2);
-  const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-
-  function toast(msg, type = '') {
-    const el = $('toast');
-    el.textContent = msg;
-    el.className = 'toast show' + (type ? ' ' + type : '');
-    clearTimeout(toast._t);
-    toast._t = setTimeout(() => el.classList.remove('show'), 2400);
-  }
-
-  function markSaved() {
-    state.dirty = false;
-    const el = $('save-status');
-    el.textContent = '✓ Guardado';
-    el.className = 'save-status saved';
-    setTimeout(() => { if (!state.dirty) { el.textContent = 'Sin cambios'; el.className = 'save-status'; } }, 1800);
-  }
-
+  // ============ APLICAR TEXTOS A LA PÁGINA ============
   function applyTextsToPage() {
     const t = state.texts;
-    // Announce WhatsApp
-    document.querySelectorAll('.announce a').forEach(a => {
-      a.href = `https://wa.me/${t.whatsapp}`;
-      a.textContent = `+${t.whatsapp.slice(0,2)} ${t.whatsapp.slice(2,5)} ${t.whatsapp.slice(5,8)} ${t.whatsapp.slice(8)}`;
-    });
+    const wa = waNumber(t.whatsapp);
+
+    const announceEl = $('announce');
+    if (announceEl) {
+      const parts = (t.anuncio || '').split('·').map(s => s.trim()).filter(Boolean);
+      const p1 = parts[0] || 'Envío gratis desde S/ 150';
+      const p2 = parts[1] || `Recojo en tienda: ${t.direccion}`;
+      announceEl.innerHTML = `
+        <span><span class="star">★</span> ${esc(p1)}</span>
+        <span><span class="star">★</span> ${esc(p2)}</span>
+        <span><span class="star">★</span> WhatsApp: <a href="https://wa.me/${t.whatsapp}" target="_blank">${wa}</a></span>
+      `;
+    }
+
+    const bn = $('brand-name'); if (bn) bn.textContent = t.nombreTienda;
+    const bl = $('brand-logo'); if (bl) bl.textContent = (t.nombreTienda || 'JA').replace(/[^A-Za-zÁÉÍÓÚáéíóúÑñ]/g, '').slice(0,2).toUpperCase() || 'JA';
+    const fl = $('footer-logo'); if (fl) fl.textContent = bl ? bl.textContent : 'JA';
+    const at = $('admin-title'); if (at) at.textContent = t.nombreTienda;
+
     const he = $('hero-eyebrow-text'); if (he) he.textContent = t.heroEyebrow;
     const hh = $('hero-hand'); if (hh) hh.textContent = t.heroHand;
     const hs = $('hero-sub'); if (hs) hs.textContent = t.heroSub;
-    const bn = $('brand-name'); if (bn) bn.textContent = t.nombreTienda;
+
+    const hw = $('hero-wa-btn');
+    if (hw) hw.href = `https://wa.me/${t.whatsapp}?text=Hola%2C%20quisiera%20ver%20el%20cat%C3%A1logo`;
+
     const fn = $('footer-name'); if (fn) fn.textContent = t.nombreTienda;
     const fw = $('footer-whatsapp');
-    if (fw) {
-      fw.href = `https://wa.me/${t.whatsapp}`;
-      fw.textContent = `WhatsApp +${t.whatsapp.slice(0,2)} ${t.whatsapp.slice(2,5)} ${t.whatsapp.slice(5,8)} ${t.whatsapp.slice(8)}`;
-    }
+    if (fw) { fw.href = `https://wa.me/${t.whatsapp}`; fw.textContent = `WhatsApp ${wa}`; }
     const fe = $('footer-email');
     if (fe) { fe.href = `mailto:${t.email}`; fe.textContent = t.email; }
     const fa = $('footer-address'); if (fa) fa.textContent = t.direccion;
-    document.querySelectorAll('a[href^="https://wa.me/"]').forEach(a => {
-      if (a.classList.contains('btn-ghost')) a.href = `https://wa.me/${t.whatsapp}?text=Hola%2C%20quisiera%20ver%20el%20cat%C3%A1logo`;
-      else if (a.textContent.trim() === 'Escríbenos') a.href = `https://wa.me/${t.whatsapp}`;
-    });
+    const fh = $('footer-hours'); if (fh) fh.textContent = t.horario;
+    const fhw = $('footer-help-wa'); if (fhw) fhw.href = `https://wa.me/${t.whatsapp}`;
+
+    const sa = $('ship-address'); if (sa) sa.textContent = t.direccion;
   }
 
   // ============ CATALOG ============
@@ -921,6 +935,87 @@
     return `Hola ${state.texts.nombreTienda}, quiero hacer este pedido:\n\n${lines.join('\n')}\n\nTotal aprox: S/ ${fmt(total)}\n\n¿Me confirman disponibilidad y envío?`;
   }
 
+  // ============ CARGA Y GUARDADO EN SHEET ============
+  async function loadFromSheet() {
+    const statusEl = $('load-status');
+
+    if (!CONFIG.urlSheet || !CONFIG.urlSheet.trim()) {
+      if (statusEl) { statusEl.textContent = '📦 Modo local'; statusEl.title = 'Sin URL de Google Sheets.'; }
+      return;
+    }
+
+    if (statusEl) { statusEl.textContent = '⏳ Cargando…'; statusEl.style.color = ''; }
+
+    try {
+      const url = CONFIG.urlSheet + '?v=' + Date.now();
+      const r = await fetch(url);
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      const texto = await r.text();
+
+      if (texto.trim().startsWith('<')) throw new Error('Respuesta HTML. Revisa el deployment.');
+
+      const data = JSON.parse(texto);
+
+      let prods = Array.isArray(data) ? data : (data.productos || []);
+      if (!Array.isArray(data) && data.textos && Object.keys(data.textos).length) {
+        state.texts = { ...state.texts, ...data.textos };
+        applyTextsToPage();
+      }
+
+      state.products = prods.map((p, i) => ({
+        id: i + 1,
+        nombre: p.Nombre || 'Sin nombre',
+        categoria: p.Categoria || 'General',
+        precio: parseFloat(p.Precio) || 0,
+        precioOriginal: p.PrecioOriginal ? parseFloat(p.PrecioOriginal) : null,
+        descripcion: p.Descripcion || '',
+        imagen: p.ImagenURL || 'https://placehold.co/500',
+        stock: (p.Stock || '').toLowerCase().includes('agotado') ? 'out'
+             : (p.Stock || '').toLowerCase().includes('últim') ? 'low'
+             : 'ok',
+      }));
+
+      renderCatnav(); renderFilters(); renderCatalog();
+      if (statusEl) { statusEl.textContent = `✅ ${state.products.length} productos (Sheet)`; statusEl.title = 'Sincronizado con Google Sheets'; }
+      console.info(`✅ Cargados ${state.products.length} productos desde Sheet`);
+
+    } catch (e) {
+      console.error('❌ Error al cargar del Sheet:', e.message);
+      if (statusEl) { statusEl.textContent = '❌ ' + e.message; statusEl.title = 'Revisa la consola (F12)'; statusEl.style.color = '#ff8a7a'; }
+    }
+  }
+
+  async function saveToSheet() {
+    if (!CONFIG.urlSheet || !CONFIG.urlSheet.trim()) {
+      return { ok: false, reason: 'Sin urlSheet configurado' };
+    }
+    try {
+      const payload = {
+        secret: CONFIG.secret,
+        productos: state.products.map(p => ({
+          Nombre: p.nombre,
+          Categoria: p.categoria,
+          Precio: p.precio,
+          PrecioOriginal: p.precioOriginal || '',
+          Descripcion: p.descripcion,
+          ImagenURL: p.imagen,
+          Stock: p.stock === 'out' ? 'Agotado' : p.stock === 'low' ? 'Últimas' : 'Disponible',
+        })),
+        textos: state.texts,
+      };
+      await fetch(CONFIG.urlSheet, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify(payload),
+      });
+      return { ok: true };
+    } catch (e) {
+      console.error('Error guardando en Sheet:', e);
+      return { ok: false, reason: e.message };
+    }
+  }
+
   // ============ ADMIN ============
   const $admin = $('admin-modal');
   const $adminList = $('admin-product-list');
@@ -977,11 +1072,11 @@
           </div>
           <div class="field-row">
             <div class="field"><label>Precio (S/)</label><input type="number" name="precio" value="${p.precio}" step="0.01" min="0" required></div>
-            <div class="field"><label>Precio original (opcional)</label><input type="number" name="precioOriginal" value="${p.precioOriginal || ''}" step="0.01" min="0" placeholder="Solo si hay oferta"><small>Si es mayor al precio actual, se muestra tachado.</small></div>
+            <div class="field"><label>Precio original (opcional)</label><input type="number" name="precioOriginal" value="${p.precioOriginal || ''}" step="0.01" min="0" placeholder="Solo si hay oferta"></div>
           </div>
           <div class="field"><label>Descripción</label><textarea name="descripcion" rows="3">${esc(p.descripcion || '')}</textarea></div>
-          <div class="field"><label>Imagen (URL)</label><input type="url" name="imagen" value="${esc(p.imagen || '')}" placeholder="https://..." required>
-            <div class="image-preview" style="margin-top:8px;"><div class="image-preview-img"><img src="${esc(p.imagen)}" alt="" onerror="this.src='https://placehold.co/80/f0e2c4/7f6a55?text=·'"></div><div class="image-preview-actions"><span>Preview en vivo</span><span style="font-size:10.5px;">Pega la URL directa de la imagen</span></div></div>
+          <div class="field"><label>Imagen (URL)</label><input type="url" name="imagen" value="${esc(p.imagen || '')}" required>
+            <div class="image-preview" style="margin-top:8px;"><div class="image-preview-img"><img src="${esc(p.imagen)}" alt="" onerror="this.src='https://placehold.co/80/f0e2c4/7f6a55?text=·'"></div><div class="image-preview-actions"><span>Preview en vivo</span></div></div>
           </div>
           <div class="admin-form-actions">
             <button type="button" class="admin-btn admin-btn-primary" id="save-product">Guardar cambios</button>
@@ -1012,21 +1107,21 @@
         stock: fd.get('stock'),
       };
       renderAdminList(); renderAdminEditor(); renderCatnav(); renderFilters(); renderCatalog();
-      saveData(); markSaved(); updateExportJSON(); toast('Producto guardado');
+      saveData(); updateExportJSON(); toast('Producto actualizado');
     });
     $('dup-product').addEventListener('click', () => {
       const newId = Math.max(0, ...state.products.map(p => p.id)) + 1;
       state.products.push({ ...p, id: newId, nombre: p.nombre + ' (copia)' });
       state.editingId = newId;
       renderAdminList(); renderAdminEditor(); renderCatnav(); renderFilters(); renderCatalog();
-      saveData(); markSaved(); updateExportJSON(); toast('Producto duplicado');
+      saveData(); updateExportJSON(); toast('Producto duplicado');
     });
     $('del-product').addEventListener('click', () => {
       if (!confirm(`¿Eliminar "${p.nombre}"?`)) return;
       state.products = state.products.filter(x => x.id !== p.id);
       state.editingId = null;
       renderAdminList(); renderAdminEditor(); renderCatnav(); renderFilters(); renderCatalog();
-      saveData(); markSaved(); updateExportJSON(); toast('Producto eliminado');
+      saveData(); updateExportJSON(); toast('Producto eliminado');
     });
   }
 
@@ -1039,13 +1134,13 @@
     });
     state.editingId = newId;
     renderAdminList(); renderAdminEditor(); renderCatnav(); renderFilters(); renderCatalog();
-    saveData(); markSaved(); updateExportJSON(); toast('Producto creado');
+    saveData(); updateExportJSON(); toast('Producto creado');
   });
 
   function renderAdminTexts() {
     const t = state.texts;
     $('admin-texts-form').innerHTML = `
-      <div class="admin-texts-head"><h2>Textos del sitio</h2><p>Edita el nombre, contacto y textos visibles.</p></div>
+      <div class="admin-texts-head"><h2>Textos del sitio</h2><p>Al guardar, se envían al Sheet y todos los ven al recargar.</p></div>
       <div class="admin-group">
         <h3>Información de la tienda</h3>
         <div class="field"><label>Nombre</label><input type="text" data-text="nombreTienda" value="${esc(t.nombreTienda)}"></div>
@@ -1064,13 +1159,13 @@
       </div>
       <div class="admin-group">
         <h3>Anuncio superior</h3>
-        <div class="field"><label>Texto</label><input type="text" data-text="anuncio" value="${esc(t.anuncio)}"><small>Recarga para ver los cambios.</small></div>
+        <div class="field"><label>Texto</label><textarea data-text="anuncio" rows="2">${esc(t.anuncio)}</textarea><small>Separa con "·" los 2 primeros mensajes. El tercero siempre será el WhatsApp.</small></div>
       </div>
       <div class="admin-form-actions"><button type="button" class="admin-btn admin-btn-primary" id="save-texts">Guardar textos</button></div>
     `;
     $('save-texts').addEventListener('click', () => {
       document.querySelectorAll('[data-text]').forEach(input => state.texts[input.dataset.text] = input.value);
-      applyTextsToPage(); saveData(); markSaved(); updateExportJSON(); toast('Textos guardados');
+      applyTextsToPage(); saveData(); updateExportJSON(); toast('Textos actualizados');
     });
   }
 
@@ -1119,7 +1214,7 @@
       state.editingId = null;
       renderAdminList(); renderAdminEditor(); renderAdminTexts();
       renderCatnav(); renderFilters(); renderCatalog(); applyTextsToPage();
-      saveData(); markSaved(); updateExportJSON(); toast('Datos importados');
+      saveData(); updateExportJSON(); toast('Datos importados');
     } catch (e) { toast('JSON inválido', 'error'); }
   });
   $('data-reset')?.addEventListener('click', () => {
@@ -1128,7 +1223,7 @@
     state.products = [...DEFAULT_PRODUCTS]; state.texts = { ...DEFAULT_TEXTS }; state.editingId = null;
     renderAdminList(); renderAdminEditor(); renderAdminTexts();
     renderCatnav(); renderFilters(); renderCatalog(); applyTextsToPage(); updateExportJSON();
-    markSaved(); toast('Datos restablecidos');
+    toast('Datos restablecidos');
   });
 
   document.querySelectorAll('.admin-tab').forEach(tab => tab.addEventListener('click', () => {
@@ -1141,7 +1236,28 @@
   }));
 
   $('admin-close').addEventListener('click', () => closeAdmin());
-  $('admin-save').addEventListener('click', () => { saveData(); markSaved(); toast('Cambios guardados'); });
+
+  $('admin-save').addEventListener('click', async () => {
+    saveData();
+    const statusEl = $('save-status');
+    statusEl.textContent = 'Guardando en Sheet…';
+    statusEl.className = 'save-status';
+
+    const result = await saveToSheet();
+
+    if (result.ok) {
+      statusEl.textContent = '✓ Guardado en Sheet';
+      statusEl.className = 'save-status saved';
+      toast('✅ Guardado. Todos lo verán al recargar.');
+    } else {
+      statusEl.textContent = '⚠️ Solo local';
+      statusEl.className = 'save-status';
+      toast('⚠️ Guardado local. ' + (result.reason || 'Configura urlSheet'), 'error');
+    }
+
+    setTimeout(() => { statusEl.textContent = 'Sin cambios'; statusEl.className = 'save-status'; }, 3000);
+  });
+
   $('admin-trigger').addEventListener('click', openAdmin);
   document.addEventListener('keydown', e => {
     if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'E' || e.key === 'e')) {
@@ -1186,29 +1302,12 @@
     }
   }));
 
-  // Cargar desde Google Sheets si hay URL configurada
-  async function loadFromSheet() {
-    if (!CONFIG.urlSheet || !CONFIG.urlSheet.trim()) return;
-    try {
-      const r = await fetch(CONFIG.urlSheet);
-      const data = await r.json();
-      if (Array.isArray(data) && data.length) {
-        state.products = data.map((p, i) => ({
-          id: i + 1,
-          nombre: p.Nombre || 'Sin nombre',
-          categoria: p.Categoria || 'General',
-          precio: parseFloat(p.Precio) || 0,
-          precioOriginal: p.PrecioOriginal ? parseFloat(p.PrecioOriginal) : null,
-          descripcion: p.Descripcion || '',
-          imagen: p.ImagenURL || 'https://placehold.co/500',
-          stock: (p.Stock || '').toLowerCase().includes('agotado') ? 'out' : (p.Stock || '').toLowerCase().includes('últim') ? 'low' : 'ok',
-        }));
-        renderCatnav(); renderFilters(); renderCatalog();
-      }
-    } catch (e) { console.warn('No se pudo cargar de Sheets:', e); }
-  }
-
-  renderCatnav(); renderFilters(); renderCatalog(); updateListUI(); applyTextsToPage();
+  // ============ INIT ============
+  renderCatnav();
+  renderFilters();
+  renderCatalog();
+  updateListUI();
+  applyTextsToPage();
   loadFromSheet();
 </script>
 
