@@ -677,50 +677,11 @@
 
 <script>
   // ============ CONFIG ============
-async function loadFromSheet() {
-  if (!CONFIG.urlSheet || !CONFIG.urlSheet.trim()) return;
-  
-  try {
-    const url = CONFIG.urlSheet + '?v=' + Date.now();
-    const r = await fetch(url);
-    const texto = await r.text();
-    
-    if (texto.trim().startsWith('<')) {
-      console.error('❌ El Sheet devolvió HTML. Revisa el deployment.');
-      return;
-    }
-    
-    const data = JSON.parse(texto);
-    
-    // Compatibilidad: formato viejo (array) o nuevo (objeto con productos+textos)
-    let prods = Array.isArray(data) ? data : (data.productos || []);
-    
-    // Aplicar textos si vienen
-    if (!Array.isArray(data) && data.textos && Object.keys(data.textos).length) {
-      state.texts = { ...state.texts, ...data.textos };
-      applyTextsToPage();
-    }
-    
-    state.products = prods.map((p, i) => ({
-      id: i + 1,
-      nombre: p.Nombre || 'Sin nombre',
-      categoria: p.Categoria || 'General',
-      precio: parseFloat(p.Precio) || 0,
-      precioOriginal: p.PrecioOriginal ? parseFloat(p.PrecioOriginal) : null,
-      descripcion: p.Descripcion || '',
-      imagen: p.ImagenURL || 'https://placehold.co/500',
-      stock: (p.Stock || '').toLowerCase().includes('agotado') ? 'out'
-           : (p.Stock || '').toLowerCase().includes('últim') ? 'low'
-           : 'ok',
-    }));
-    
-    renderCatnav(); renderFilters(); renderCatalog();
-    console.info(`✅ Cargados ${state.products.length} productos desde Sheet`);
-    
-  } catch (e) {
-    console.error('❌ Error cargando del Sheet:', e);
-  }
-}
+  const CONFIG = {
+    // Pega aquí la URL de tu Apps Script cuando quieras cargar desde Google Sheets
+    // Ejemplo: 'https://script.google.com/macros/s/AKfycb.../exec'
+    urlSheet: 'https://script.google.com/macros/s/AKfycbxB8dtYJAANkzWnjs0XLwM_hLRkl_Z3709OayFGWiDyihfLij3fIE7RCAZWBWr4_o6kpQ/exec',
+    storageKey: 'ja_data_v1',
   };
 
   // ============ TUS DATOS ============
@@ -1253,5 +1214,3 @@ async function loadFromSheet() {
 
 </body>
 </html>
-
-
