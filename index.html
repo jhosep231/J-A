@@ -1180,16 +1180,7 @@ async function loadFromSheet() {
   }));
 
   $('admin-close').addEventListener('click', () => closeAdmin());
-  // Reconstruir el anuncio superior con los textos actuales
-const announceEl = document.querySelector('.announce');
-if (announceEl) {
-  const waFmt = `+${t.whatsapp.slice(0,2)} ${t.whatsapp.slice(2,5)} ${t.whatsapp.slice(5,8)} ${t.whatsapp.slice(8)}`;
-  announceEl.innerHTML = `
-    <span><span class="star">★</span> ${esc(t.anuncio.split('·')[0].trim() || 'Envío gratis desde S/ 150')}</span>
-    <span><span class="star">★</span> Recojo en tienda: ${esc(t.direccion)}</span>
-    <span><span class="star">★</span> WhatsApp: <a href="https://wa.me/${t.whatsapp}" target="_blank">${waFmt}</a></span>
-  `;
-}
+  $('admin-save').addEventListener('click', () => { saveData(); markSaved(); toast('Cambios guardados'); });
   $('admin-trigger').addEventListener('click', openAdmin);
   document.addEventListener('keydown', e => {
     if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'E' || e.key === 'e')) {
@@ -1236,39 +1227,6 @@ if (announceEl) {
 
   // Cargar desde Google Sheets si hay URL configurada
   async function loadFromSheet() {
-async function saveToSheet() {
-  if (!CONFIG.urlSheet || !CONFIG.urlSheet.trim()) {
-    return { ok: false, reason: 'Falta urlSheet' };
-  }
-  
-  try {
-    const payload = {
-      secret: CONFIG.secret,
-      productos: state.products.map(p => ({
-        Nombre: p.nombre,
-        Categoria: p.categoria,
-        Precio: p.precio,
-        PrecioOriginal: p.precioOriginal || '',
-        Descripcion: p.descripcion,
-        ImagenURL: p.imagen,
-        Stock: p.stock === 'out' ? 'Agotado' : p.stock === 'low' ? 'Últimas' : 'Disponible',
-      })),
-      textos: state.texts,
-    };
-    
-    await fetch(CONFIG.urlSheet, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify(payload),
-    });
-    
-    return { ok: true };
-  } catch (e) {
-    console.error('Error guardando en Sheet:', e);
-    return { ok: false, reason: e.message };
-  }
-}
     if (!CONFIG.urlSheet || !CONFIG.urlSheet.trim()) return;
     try {
       const r = await fetch(CONFIG.urlSheet);
@@ -1295,4 +1253,5 @@ async function saveToSheet() {
 
 </body>
 </html>
+
 
